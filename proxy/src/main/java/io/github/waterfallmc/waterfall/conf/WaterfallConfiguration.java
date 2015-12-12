@@ -7,6 +7,13 @@ import java.io.File;
 
 public class WaterfallConfiguration extends Configuration {
 
+    /**
+     * Whether we log server list pings
+     * <p>
+     * Default is false (don't log)
+     */
+    private boolean logServerListPing = false;
+
     /*
      * Throttling options
      * Helps prevent players from overloading the servers behind us
@@ -26,9 +33,15 @@ public class WaterfallConfiguration extends Configuration {
         super.load();
         YamlConfig config = new YamlConfig(new File("waterfall.yml"));
         config.load(false); // Load, but no permissions
+        logServerListPing = config.getBoolean( "log_server_list_ping", logServerListPing );
         // Throttling options
         tabThrottle = config.getInt("throttling.tab_complete", tabThrottle);
         disableModernTabLimiter = config.getBoolean("disable_modern_tab_limiter", disableModernTabLimiter);
+    }
+
+    @Override
+    public boolean isLogServerListPing() {
+        return logServerListPing;
     }
 
     @Override

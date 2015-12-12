@@ -84,6 +84,11 @@ public interface ProxyConfig
     // Waterfall Options
     //
 
+    /**
+     * Whether we log server list pings
+     */
+    boolean isLogServerListPing();
+
     // Throttling options
 
     /**
