@@ -2,10 +2,13 @@ package net.md_5.bungee;
 
 import com.google.common.base.Joiner;
 import com.google.common.primitives.UnsignedLongs;
+import com.google.common.primitives.Ints;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
+
+import io.github.waterfallmc.waterfall.utils.Hex;
 
 /**
  * Series of utility classes to perform various operations.
@@ -43,7 +46,7 @@ public class Util
      */
     public static String hex(int i)
     {
-        return String.format( "0x%02X", i );
+        return Hex.encodeString(Ints.toByteArray(i));
     }
 
     /**
