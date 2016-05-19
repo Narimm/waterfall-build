@@ -13,4 +13,12 @@ public class TranslatableComponentTest
         Assert.assertEquals( "Test string with 2 placeholders: aoeu", testComponent.toPlainText() );
         Assert.assertEquals( "§fTest string with §f2§f placeholders: §faoeu", testComponent.toLegacyText() );
     }
+
+    @Test
+    public void testEscapedPercentInPlainText()
+    {
+        TranslatableComponent testComponent = new TranslatableComponent( "Test string with %% sign" );
+        Assert.assertEquals( "Test string with % sign", testComponent.toPlainText() );
+        Assert.assertEquals( "§fTest string with §f%§f sign", testComponent.toLegacyText() );
+    }
 }
