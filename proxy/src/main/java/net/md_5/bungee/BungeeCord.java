@@ -123,7 +123,7 @@ public class BungeeCord extends ProxyServer
      * locations.yml save thread.
      */
     private final Timer saveThread = new Timer( "Reconnect Saver" );
-    private final Timer metricsThread = new Timer( "Metrics Thread" );
+    // private final Timer metricsThread = new Timer( "Metrics Thread" ); // Waterfall: Disable Metrics
     /**
      * Server socket listener.
      */
@@ -304,7 +304,7 @@ public class BungeeCord extends ProxyServer
                 }
             }
         }, 0, TimeUnit.MINUTES.toMillis( 5 ) );
-        metricsThread.scheduleAtFixedRate( new Metrics(), 0, TimeUnit.MINUTES.toMillis( Metrics.PING_INTERVAL ) );
+        //metricsThread.scheduleAtFixedRate( new Metrics(), 0, TimeUnit.MINUTES.toMillis( Metrics.PING_INTERVAL ) ); // Waterfall: Disable Metrics
 
         Runtime.getRuntime().addShutdownHook( new Thread()
         {
@@ -462,7 +462,7 @@ public class BungeeCord extends ProxyServer
             reconnectHandler.close();
         }
         saveThread.cancel();
-        metricsThread.cancel();
+        //metricsThread.cancel(); // Waterfall: Disable Metrics
 
         getLogger().info( "Disabling plugins" );
         for ( Plugin plugin : Lists.reverse( new ArrayList<>( pluginManager.getPlugins() ) ) )
