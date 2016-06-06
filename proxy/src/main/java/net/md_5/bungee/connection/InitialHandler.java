@@ -565,7 +565,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
     @Override
     public void disconnect(final BaseComponent... reason)
     {
-        if ( thisState != State.STATUS && thisState != State.PING )
+        if ( thisState != State.STATUS && thisState != State.PING && thisState != State.HANDSHAKE ) // Waterfall: Don't kick during handshake
         {
             ch.delayedClose( new Kick( ComponentSerializer.toString( reason ) ) );
         } else
