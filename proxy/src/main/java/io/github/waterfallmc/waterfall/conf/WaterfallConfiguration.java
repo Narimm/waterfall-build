@@ -1,7 +1,9 @@
 package io.github.waterfallmc.waterfall.conf;
 
+import com.google.common.base.Joiner;
 import net.md_5.bungee.conf.Configuration;
 import net.md_5.bungee.conf.YamlConfig;
+import net.md_5.bungee.protocol.ProtocolConstants;
 
 import java.io.File;
 
@@ -13,6 +15,12 @@ public class WaterfallConfiguration extends Configuration {
      * Default is false (don't log)
      */
     private boolean logServerListPing = false;
+
+    /**
+     * The supported versions displayed to the client
+     * <p>Default is a comma separated list of supported versions. For example 1.8.x, 1.9.x, 1.10.x</p>
+     */
+    private String gameVersion;
 
     /*
      * Throttling options
@@ -34,6 +42,7 @@ public class WaterfallConfiguration extends Configuration {
         YamlConfig config = new YamlConfig(new File("waterfall.yml"));
         config.load(false); // Load, but no permissions
         logServerListPing = config.getBoolean( "log_server_list_ping", logServerListPing );
+        gameVersion = config.getString("game_version", "").isEmpty() ? Joiner.on(", ").join(ProtocolConstants.SUPPORTED_VERSIONS) : config.getString("game_version", "");
         // Throttling options
         tabThrottle = config.getInt("throttling.tab_complete", tabThrottle);
         disableModernTabLimiter = config.getBoolean("disable_modern_tab_limiter", disableModernTabLimiter);
@@ -42,6 +51,11 @@ public class WaterfallConfiguration extends Configuration {
     @Override
     public boolean isLogServerListPing() {
         return logServerListPing;
+    }
+
+    @Override
+    public String getGameVersion() {
+        return gameVersion;
     }
 
     @Override

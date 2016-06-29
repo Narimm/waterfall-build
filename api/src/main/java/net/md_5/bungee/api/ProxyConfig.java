@@ -163,6 +163,11 @@ public interface ProxyConfig
      */
     boolean isLogServerListPing();
 
+    /**
+     * The supported versions
+     */
+    String getGameVersion();
+
     // Throttling options
 
     /**
