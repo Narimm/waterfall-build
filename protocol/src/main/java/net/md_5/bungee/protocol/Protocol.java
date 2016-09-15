@@ -18,6 +18,8 @@ import net.md_5.bungee.protocol.packet.EncryptionRequest;
 import net.md_5.bungee.protocol.packet.EncryptionResponse;
 import net.md_5.bungee.protocol.packet.EntityStatus;
 import net.md_5.bungee.protocol.packet.GameState;
+import net.md_5.bungee.protocol.packet.EntityEffect;
+import net.md_5.bungee.protocol.packet.EntityRemoveEffect;
 import net.md_5.bungee.protocol.packet.Handshake;
 import net.md_5.bungee.protocol.packet.KeepAlive;
 import net.md_5.bungee.protocol.packet.Kick;
@@ -114,6 +116,18 @@ public enum Protocol
                     map( ProtocolConstants.MINECRAFT_1_16, 0x0C ),
                     map( ProtocolConstants.MINECRAFT_1_17, 0x0D )
             );
+            // Waterfall start
+            TO_CLIENT.registerPacket(
+                    EntityEffect.class,
+                    map(ProtocolConstants.MINECRAFT_1_8, 0x1D),
+                    map(ProtocolConstants.MINECRAFT_1_9, Integer.MIN_VALUE)
+            );
+            TO_CLIENT.registerPacket(
+                    EntityRemoveEffect.class,
+                    map(ProtocolConstants.MINECRAFT_1_8, 0x1E),
+                    map(ProtocolConstants.MINECRAFT_1_9, Integer.MIN_VALUE)
+            );
+            // Waterfall end
             TO_CLIENT.registerPacket(
                     PlayerListItem.class, // PlayerInfo
                     map( ProtocolConstants.MINECRAFT_1_8, 0x38 ),
@@ -535,9 +549,11 @@ public enum Protocol
                         }
                     }
 
+                    if (mapping.packetID != Integer.MIN_VALUE) { // Waterfall
                     ProtocolData data = protocols.get( protocol );
                     data.packetMap.put( packetClass, mapping.packetID );
                     data.packetConstructors[mapping.packetID] = constructor;
+                    } // Waterfall
                 }
             } catch ( NoSuchMethodException ex )
             {
