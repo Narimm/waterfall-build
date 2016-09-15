@@ -1,6 +1,8 @@
 package net.md_5.bungee.protocol;
 
 import net.md_5.bungee.protocol.packet.BossBar;
+import net.md_5.bungee.protocol.packet.EntityEffect;
+import net.md_5.bungee.protocol.packet.EntityRemoveEffect;
 import net.md_5.bungee.protocol.packet.KeepAlive;
 import net.md_5.bungee.protocol.packet.ClientSettings;
 import net.md_5.bungee.protocol.packet.ClientStatus;
@@ -158,4 +160,13 @@ public abstract class AbstractPacketHandler
     public void handle(LoginPayloadResponse response) throws Exception
     {
     }
+    // Waterfall start
+    public void handle(EntityEffect entityEffect) throws Exception
+    {
+    }
+
+    public void handle(EntityRemoveEffect removeEffect) throws Exception
+    {
+    }
+    // Waterfall end
 }
