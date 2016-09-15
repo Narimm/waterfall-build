@@ -17,6 +17,8 @@ import net.md_5.bungee.protocol.packet.EncryptionRequest;
 import net.md_5.bungee.protocol.packet.EncryptionResponse;
 import net.md_5.bungee.protocol.packet.EntityStatus;
 import net.md_5.bungee.protocol.packet.GameState;
+import net.md_5.bungee.protocol.packet.EntityEffect;
+import net.md_5.bungee.protocol.packet.EntityRemoveEffect;
 import net.md_5.bungee.protocol.packet.Handshake;
 import net.md_5.bungee.protocol.packet.KeepAlive;
 import net.md_5.bungee.protocol.packet.Kick;
@@ -103,6 +105,31 @@ public enum Protocol
                     map( ProtocolConstants.MINECRAFT_1_15, 0x0D ),
                     map( ProtocolConstants.MINECRAFT_1_16, 0x0C )
             );
+            // Waterfall start
+            TO_CLIENT.registerPacket(
+                    EntityEffect.class,
+                    map(ProtocolConstants.MINECRAFT_1_8, 0x1D),
+                    map(ProtocolConstants.MINECRAFT_1_9, 0x4C),
+                    map(ProtocolConstants.MINECRAFT_1_9_4, 0x4B),
+                    map(ProtocolConstants.MINECRAFT_1_12, 0x4E),
+                    map(ProtocolConstants.MINECRAFT_1_12_1, 0x4F),
+                    map(ProtocolConstants.MINECRAFT_1_13, 0x53),
+                    map(ProtocolConstants.MINECRAFT_1_14, 0x59),
+                    map(ProtocolConstants.MINECRAFT_1_15, 0x5A),
+                    map(ProtocolConstants.MINECRAFT_1_16, 0x59)
+            );
+            TO_CLIENT.registerPacket(
+                    EntityRemoveEffect.class,
+                    map(ProtocolConstants.MINECRAFT_1_8, 0x1E),
+                    map(ProtocolConstants.MINECRAFT_1_9, 0x31),
+                    map(ProtocolConstants.MINECRAFT_1_12, 0x32),
+                    map(ProtocolConstants.MINECRAFT_1_12_1, 0x33),
+                    map(ProtocolConstants.MINECRAFT_1_13, 0x36),
+                    map(ProtocolConstants.MINECRAFT_1_14, 0x38),
+                    map(ProtocolConstants.MINECRAFT_1_15, 0x39),
+                    map(ProtocolConstants.MINECRAFT_1_16, 0x38)
+            );
+            // Waterfall end
             TO_CLIENT.registerPacket(
                     PlayerListItem.class, // PlayerInfo
                     map( ProtocolConstants.MINECRAFT_1_8, 0x38 ),
