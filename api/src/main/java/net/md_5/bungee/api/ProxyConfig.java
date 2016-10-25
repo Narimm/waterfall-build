@@ -101,4 +101,9 @@ public interface ProxyConfig
      * @return favicon
      */
     Favicon getFaviconObject();
+
+    //
+    // Waterfall Options
+    //
+
 }
