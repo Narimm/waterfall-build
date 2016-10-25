@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
+import io.github.waterfallmc.waterfall.StringUtil;
 import io.netty.channel.Channel;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -148,6 +149,7 @@ public class UpstreamBridge extends PacketHandler
     {
         int maxLength = ( con.getPendingConnection().getVersion() >= ProtocolConstants.MINECRAFT_1_11 ) ? 256 : 100;
         Preconditions.checkArgument( chat.getMessage().length() <= maxLength, "Chat message too long" ); // Mojang limit, check on updates
+        Preconditions.checkArgument(!StringUtil.isBlank(chat.getMessage()), "Chat message is empty");
 
         ChatEvent chatEvent = new ChatEvent( con, con.getServer(), chat.getMessage() );
         if ( !bungee.getPluginManager().callEvent( chatEvent ).isCancelled() )
