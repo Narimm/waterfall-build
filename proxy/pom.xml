@@ -41,6 +41,14 @@
             <version>${netty.version}</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Waterfall Start - add Netty DNS resolver -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns</artifactId>
+            <version>${netty.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Waterfall End -->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-handler</artifactId>
