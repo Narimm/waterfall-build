@@ -112,7 +112,7 @@ public class PipelineUtils
         return epoll ? EpollSocketChannel.class : NioSocketChannel.class;
     }
 
-    public static Class<? extends Channel> getDatagramChannel()
+    public static Class<? extends io.netty.channel.socket.DatagramChannel> getDatagramChannel() // Waterfall - change to DatagramChannel
     {
         return epoll ? EpollDatagramChannel.class : NioDatagramChannel.class;
     }

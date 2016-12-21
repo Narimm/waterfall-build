@@ -168,6 +168,11 @@ public interface ProxyConfig
      */
     String getGameVersion();
 
+    /**
+     * Whether Netty's async DNS resolver is used for account authentication.
+     */
+    boolean isUseNettyDnsResolver();
+
     // Throttling options
 
     /**
