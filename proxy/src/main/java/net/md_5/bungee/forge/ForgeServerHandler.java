@@ -51,7 +51,7 @@ public class ForgeServerHandler
         ForgeServerHandshakeState prevState = state;
         packetQueue.add( message );
         state = state.send( message, con );
-        if ( state != prevState ) // send packets
+        if ( state == ForgeServerHandshakeState.DONE || state != prevState ) // send packets
         {
             synchronized ( packetQueue )
             {
