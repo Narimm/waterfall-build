@@ -63,6 +63,9 @@ public class BungeeCordLauncher
 
         if ( !options.has( "noconsole" ) )
         {
+            // Waterfall start - Use TerminalConsoleAppender
+            new io.github.waterfallmc.waterfall.console.WaterfallConsole().start();
+            /*
             String line;
             while ( bungee.isRunning && ( line = bungee.getConsoleReader().readLine( ">" ) ) != null )
             {
@@ -71,6 +74,8 @@ public class BungeeCordLauncher
                     bungee.getConsole().sendMessage( new ComponentBuilder( "Command not found" ).color( ChatColor.RED ).create() );
                 }
             }
+            */
+            // Waterfall end
         }
     }
 }
