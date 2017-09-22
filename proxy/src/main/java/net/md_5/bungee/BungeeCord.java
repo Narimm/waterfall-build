@@ -44,7 +44,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jline.console.ConsoleReader;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
@@ -77,14 +76,11 @@ import net.md_5.bungee.command.CommandEnd;
 import net.md_5.bungee.command.CommandIP;
 import net.md_5.bungee.command.CommandPerms;
 import net.md_5.bungee.command.CommandReload;
-import net.md_5.bungee.command.ConsoleCommandCompleter;
 import net.md_5.bungee.command.ConsoleCommandSender;
 import net.md_5.bungee.compress.CompressFactory;
 import net.md_5.bungee.conf.Configuration;
 import net.md_5.bungee.conf.YamlConfig;
 import net.md_5.bungee.forge.ForgeConstants;
-import net.md_5.bungee.log.BungeeLogger;
-import net.md_5.bungee.log.LoggingOutputStream;
 import net.md_5.bungee.module.ModuleManager;
 import net.md_5.bungee.netty.PipelineUtils;
 import net.md_5.bungee.protocol.DefinedPacket;
@@ -94,7 +90,6 @@ import net.md_5.bungee.protocol.packet.PluginMessage;
 import net.md_5.bungee.query.RemoteQuery;
 import net.md_5.bungee.scheduler.BungeeScheduler;
 import net.md_5.bungee.util.CaseInsensitiveMap;
-import org.fusesource.jansi.AnsiConsole;
 
 /**
  * Main BungeeCord proxy class.
@@ -150,8 +145,12 @@ public class BungeeCord extends ProxyServer
     private final File pluginsFolder = new File( "plugins" );
     @Getter
     private final BungeeScheduler scheduler = new BungeeScheduler();
+    // Waterfall start - Remove ConsoleReader for JLine 3 update
+    /*
     @Getter
     private final ConsoleReader consoleReader;
+    */
+    // Waterfall end
     @Getter
     private final Logger logger;
     public final Gson gson = new GsonBuilder()
@@ -202,6 +201,8 @@ public class BungeeCord extends ProxyServer
         // BungeeCord. This version is only used when extracting the libraries to their temp folder.
         System.setProperty( "library.jansi.version", "BungeeCord" );
 
+        // Waterfall start - Use TerminalConsoleAppender and Log4J
+        /*
         AnsiConsole.systemInstall();
         consoleReader = new ConsoleReader();
         consoleReader.setExpandEvents( false );
@@ -210,6 +211,9 @@ public class BungeeCord extends ProxyServer
         logger = new BungeeLogger( "BungeeCord", "proxy.log", consoleReader );
         System.setErr( new PrintStream( new LoggingOutputStream( logger, Level.SEVERE ), true ) );
         System.setOut( new PrintStream( new LoggingOutputStream( logger, Level.INFO ), true ) );
+        */
+        logger = io.github.waterfallmc.waterfall.log4j.WaterfallLogger.create();
+        // Waterfall end
 
         pluginManager = new PluginManager( this );
         getPluginManager().registerCommand( null, new CommandReload() );
