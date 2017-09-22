@@ -22,6 +22,9 @@ public class Test
         bungee.getLogger().info( "Enabled Waterfall version " + bungee.getVersion() );
         bungee.start();
 
+        // Waterfall start - Use TerminalConsoleAppender
+        new io.github.waterfallmc.waterfall.console.WaterfallConsole().start();
+        /*
         while ( bungee.isRunning )
         {
             String line = bungee.getConsoleReader().readLine( ">" );
@@ -33,5 +36,7 @@ public class Test
                 }
             }
         }
+        */
+        // Waterfall end
     }
 }
