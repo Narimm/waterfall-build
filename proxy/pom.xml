@@ -71,7 +71,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.waterfallmc</groupId>
-            <artifactId>waterfall-log</artifactId>
+            <artifactId>waterfall-log4j</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -93,12 +93,13 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+        <!-- // Waterfall - We already bundle an slf4j impl
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-slf4j</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
-        </dependency>
+        </dependency> // Waterfall - We already bundle an slf4j impl -->
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
             <artifactId>jopt-simple</artifactId>
@@ -130,6 +131,25 @@
             <version>1.7.0</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- Waterfall start - Console improvements - bring back slf4j-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.30</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.minecrell</groupId>
+            <artifactId>terminalconsoleappender</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline-terminal-jansi</artifactId>
+            <version>3.12.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Waterfall end -->
     </dependencies>
 
     <build>
