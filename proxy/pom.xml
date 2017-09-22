@@ -70,7 +70,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.waterfallmc</groupId>
-            <artifactId>waterfall-log</artifactId>
+            <artifactId>waterfall-log4j</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -104,6 +104,20 @@
             <version>5.1.48</version>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- Waterfall start - Console improvements -->
+        <dependency>
+            <groupId>net.minecrell</groupId>
+            <artifactId>terminalconsoleappender</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline-terminal-jansi</artifactId>
+            <version>3.12.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Waterfall end -->
     </dependencies>
 
     <build>
