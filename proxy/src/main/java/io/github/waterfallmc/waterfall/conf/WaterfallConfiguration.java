@@ -17,6 +17,13 @@ public class WaterfallConfiguration extends Configuration {
     private boolean logServerListPing = false;
 
     /**
+     * Whether we log InitialHandler connections
+     * <p>
+     * Default is true
+     */
+    private boolean logInitialHandlerConnections = true;
+
+    /**
      * The supported versions displayed to the client
      * <p>Default is a comma separated list of supported versions. For example 1.8.x, 1.9.x, 1.10.x</p>
      */
@@ -48,6 +55,7 @@ public class WaterfallConfiguration extends Configuration {
         YamlConfig config = new YamlConfig(new File("waterfall.yml"));
         config.load(false); // Load, but no permissions
         logServerListPing = config.getBoolean( "log_server_list_ping", logServerListPing );
+        logInitialHandlerConnections = config.getBoolean( "log_initial_handler_connections", logInitialHandlerConnections );
         gameVersion = config.getString("game_version", "").isEmpty() ? Joiner.on(", ").join(ProtocolConstants.SUPPORTED_VERSIONS) : config.getString("game_version", "");
         useNettyDnsResolver = config.getBoolean("use_netty_dns_resolver", useNettyDnsResolver);
         // Throttling options
@@ -58,6 +66,11 @@ public class WaterfallConfiguration extends Configuration {
     @Override
     public boolean isLogServerListPing() {
         return logServerListPing;
+    }
+
+    @Override
+    public boolean isLogInitialHandlerConnections() {
+        return logInitialHandlerConnections;
     }
 
     @Override

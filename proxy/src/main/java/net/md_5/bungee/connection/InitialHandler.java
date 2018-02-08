@@ -310,7 +310,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
                 break;
             case 2:
                 // Login
-                if ( !bungee.getConfig().isLogPings() )
+                if (BungeeCord.getInstance().getConfig().isLogInitialHandlerConnections() ) // Waterfall
                 {
                     bungee.getLogger().log( Level.INFO, "{0} has connected", this );
                 }

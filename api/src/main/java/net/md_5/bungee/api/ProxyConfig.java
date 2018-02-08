@@ -164,6 +164,11 @@ public interface ProxyConfig
     boolean isLogServerListPing();
 
     /**
+     * Whether we log InitialHandler connections
+     */
+    boolean isLogInitialHandlerConnections();
+
+    /**
      * The supported versions
      */
     String getGameVersion();
