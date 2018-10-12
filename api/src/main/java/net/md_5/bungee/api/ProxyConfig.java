@@ -207,4 +207,11 @@ public interface ProxyConfig
      * @return should we disable the tab completion limit for 1.13+ clients
      */
     boolean isDisableModernTabLimiter();
+
+    /**
+     * Should we allow empty packets
+     *
+     * @return should we allow empty packets
+     */
+    boolean isAllowEmptyPackets();
 }
