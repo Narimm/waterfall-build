@@ -12,6 +12,13 @@ public class Varint21FrameDecoder extends ByteToMessageDecoder
 {
 
     private static boolean DIRECT_WARNING;
+    // Waterfall start
+    private boolean allowEmptyPackets;
+
+    public Varint21FrameDecoder(boolean allowEmptyPackets) {
+        this.allowEmptyPackets = allowEmptyPackets;
+    }
+    // Waterfall end
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception
@@ -31,7 +38,7 @@ public class Varint21FrameDecoder extends ByteToMessageDecoder
             if ( buf[i] >= 0 )
             {
                 int length = DefinedPacket.readVarInt( Unpooled.wrappedBuffer( buf ) );
-                if ( length == 0 )
+                if ( length == 0 && !allowEmptyPackets) // Waterfall
                 {
                     throw new CorruptedFrameException( "Empty Packet!" );
                 }
