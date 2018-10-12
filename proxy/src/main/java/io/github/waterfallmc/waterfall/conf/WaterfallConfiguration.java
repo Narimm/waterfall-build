@@ -42,6 +42,17 @@ public class WaterfallConfiguration extends Configuration {
     private int tabThrottle = 1000;
     private boolean disableModernTabLimiter = true;
 
+
+    /**
+     * This setting provides the ability to allow servers/clients
+     * to send empty packets without kicking the player with an error.
+     *
+     * This option is not encouraged or supported in any capacity, and is
+     * provided as a last ditch effort for server owners to allow players
+     * to connect in such a broken state as allowed by vanilla.
+     */
+    private boolean allowEmptyPackets = false;
+
     @Override
     public void load() {
         super.load();
@@ -53,6 +64,7 @@ public class WaterfallConfiguration extends Configuration {
         // Throttling options
         tabThrottle = config.getInt("throttling.tab_complete", tabThrottle);
         disableModernTabLimiter = config.getBoolean("disable_modern_tab_limiter", disableModernTabLimiter);
+        allowEmptyPackets = config.getBoolean("allow_empty_packets", allowEmptyPackets);
     }
 
     @Override
@@ -78,5 +90,10 @@ public class WaterfallConfiguration extends Configuration {
     @Override
     public boolean isDisableModernTabLimiter() {
         return disableModernTabLimiter;
+    }
+
+    @Override
+    public boolean isAllowEmptyPackets() {
+        return allowEmptyPackets;
     }
 }
