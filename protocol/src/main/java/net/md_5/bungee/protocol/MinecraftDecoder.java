@@ -36,6 +36,12 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
         Object packetTypeInfo = null;
         try
         {
+            // Waterfall start
+            if (in.readableBytes() == 0) {
+                return;
+            }
+            // Waterfall end
+
             int packetId = DefinedPacket.readVarInt( in );
             packetTypeInfo = packetId;
 
