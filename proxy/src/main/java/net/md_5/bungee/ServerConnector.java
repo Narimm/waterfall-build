@@ -15,6 +15,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
+import net.md_5.bungee.api.event.ServerJoinEvent;
 import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.score.Objective;
@@ -183,6 +184,9 @@ public class ServerConnector extends PacketHandler
         {
             user.getForgeClientHandler().resetHandshake();
         }
+
+        ServerJoinEvent event = new ServerJoinEvent( user, user.getServer() );
+        bungee.getPluginManager().callEvent( event );
 
         throw CancelSendSignal.INSTANCE;
     }
