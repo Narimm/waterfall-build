@@ -134,7 +134,8 @@ public class InitialHandler extends PacketHandler implements PendingConnection
     {
         if ( packet.packet == null )
         {
-            throw new IllegalArgumentException( "Unexpected packet received during login process!\n" + BufUtil.dump( packet.buf, 64 ) );
+            bungee.getLogger().warning( this.toString() + ": Unexpected packet received during login process!\n" + BufUtil.dump( packet.buf, 64 ) ); // Waterfall
+            ch.close(); // Waterfall
         }
     }
 
