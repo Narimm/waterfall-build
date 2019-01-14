@@ -145,6 +145,7 @@ public final class UserConnection implements ProxiedPlayer
     @Setter
     private ForgeServerHandler forgeServerHandler;
     /*========================================================================*/
+    private boolean disableEntityMetadaRewrite;
     private final Unsafe unsafe = new Unsafe()
     {
         @Override
@@ -156,6 +157,13 @@ public final class UserConnection implements ProxiedPlayer
 
     public void init()
     {
+        // Waterfall start
+        disableEntityMetadaRewrite = bungee.getConfig().isDisableEntityMetadataRewrite();
+        if ( disableEntityMetadaRewrite )
+        {
+            entityRewrite = net.md_5.bungee.entitymap.EntityMap_Dummy.INSTANCE;
+        } else
+        // Waterfall end
         this.entityRewrite = EntityMap.getEntityMap( getPendingConnection().getVersion() );
 
         this.displayName = name;
@@ -730,4 +738,10 @@ public final class UserConnection implements ProxiedPlayer
     {
         return serverSentScoreboard;
     }
+
+    // Waterfall start
+    public boolean isDisableEntityMetadataRewrite() {
+        return disableEntityMetadaRewrite;
+    }
+    // Waterfall end
 }

@@ -274,7 +274,13 @@ public abstract class EntityMap
                     DefinedPacket.readVarInt( packet );
                     break;
                 default:
-                    throw new IllegalArgumentException( "Unknown meta type " + type );
+                    // Waterfall start - Don't lie
+                    if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_13 )
+                    {
+                        type++;
+                    }
+                    throw new IllegalArgumentException( "Unknown meta type " + type  + ": Using mods? refer to disable_entity_metadata_rewrite in waterfall.yml" );
+                    // Waterfall end
             }
         }
 
