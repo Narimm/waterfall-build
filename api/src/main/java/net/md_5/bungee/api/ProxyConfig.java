@@ -214,4 +214,9 @@ public interface ProxyConfig
      * @return should we allow empty packets
      */
     boolean isAllowEmptyPackets();
+
+    /**
+     * @return Should we disable entity metadata rewriting?
+     */
+    boolean isDisableEntityMetadataRewrite();
 }

@@ -53,6 +53,8 @@ public class WaterfallConfiguration extends Configuration {
      */
     private boolean allowEmptyPackets = false;
 
+    private boolean disableEntityMetadataRewrite = false;
+
     @Override
     public void load() {
         super.load();
@@ -65,6 +67,7 @@ public class WaterfallConfiguration extends Configuration {
         tabThrottle = config.getInt("throttling.tab_complete", tabThrottle);
         disableModernTabLimiter = config.getBoolean("disable_modern_tab_limiter", disableModernTabLimiter);
         allowEmptyPackets = config.getBoolean("allow_empty_packets", allowEmptyPackets);
+        disableEntityMetadataRewrite = config.getBoolean("disable_entity_metadata_rewrite", disableEntityMetadataRewrite);
     }
 
     @Override
@@ -95,5 +98,10 @@ public class WaterfallConfiguration extends Configuration {
     @Override
     public boolean isAllowEmptyPackets() {
         return allowEmptyPackets;
+    }
+
+    @Override
+    public boolean isDisableEntityMetadataRewrite() {
+        return disableEntityMetadataRewrite;
     }
 }
