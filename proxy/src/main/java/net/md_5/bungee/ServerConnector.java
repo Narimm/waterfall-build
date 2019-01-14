@@ -226,7 +226,7 @@ public class ServerConnector extends PacketHandler
             ch.write( message );
         }
 
-        if ( user.getSettings() != null )
+        if (!user.isDisableEntityMetadataRewrite() && user.getSettings() != null )
         {
             ch.write( user.getSettings() );
         }
@@ -260,6 +260,7 @@ public class ServerConnector extends PacketHandler
             user.getTabListHandler().onServerChange();
 
             Scoreboard serverScoreboard = user.getServerSentScoreboard();
+            if ( !user.isDisableEntityMetadataRewrite() ) { // Waterfall
             for ( Objective objective : serverScoreboard.getObjectives() )
             {
                 user.unsafe().sendPacket( new ScoreboardObjective( objective.getName(), objective.getValue(), ScoreboardObjective.HealthDisplay.fromString( objective.getType() ), (byte) 1 ) );
@@ -272,6 +273,7 @@ public class ServerConnector extends PacketHandler
             {
                 user.unsafe().sendPacket( new net.md_5.bungee.protocol.packet.Team( team.getName() ) );
             }
+            } // Waterfall
             serverScoreboard.clear();
 
             for ( UUID bossbar : user.getSentBossBars() )
@@ -285,12 +287,27 @@ public class ServerConnector extends PacketHandler
             user.unsafe().sendPacket( new EntityStatus( user.getClientEntityId(), login.isReducedDebugInfo() ? EntityStatus.DEBUG_INFO_REDUCED : EntityStatus.DEBUG_INFO_NORMAL ) );
 
             user.setDimensionChange( true );
-            if ( login.getDimension() == user.getDimension() )
+            if ( !user.isDisableEntityMetadataRewrite() && login.getDimension() == user.getDimension() ) // Waterfall - defer
             {
                 user.unsafe().sendPacket( new Respawn( ( login.getDimension() >= 0 ? -1 : 0 ), login.getDifficulty(), login.getGameMode(), login.getLevelType() ) );
             }
 
             user.setServerEntityId( login.getEntityId() );
+            // Waterfall start
+            if ( user.isDisableEntityMetadataRewrite() ) {
+                // Ensure that we maintain consistency
+                user.setClientEntityId( login.getEntityId() );
+
+                Login modLogin = new Login( login.getEntityId(),login.getGameMode(), login.getDimension(),
+                        login.getDifficulty(), login.getMaxPlayers(), login.getLevelType(), login.getViewDistance(), login.isReducedDebugInfo() );
+                user.unsafe().sendPacket(modLogin);
+
+                // Only send if we're in the same dimension
+                if (user.getDimension() == login.getDimension()) {
+                    user.unsafe().sendPacket( new Respawn(user.getDimension() == 0 ? -1 : 0, login.getDifficulty(), login.getGameMode(), login.getLevelType()));
+                }
+            }
+            // Waterfall end
             user.unsafe().sendPacket( new Respawn( login.getDimension(), login.getDifficulty(), login.getGameMode(), login.getLevelType() ) );
             if ( user.getPendingConnection().getVersion() >= ProtocolConstants.MINECRAFT_1_14 )
             {
