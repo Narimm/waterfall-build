@@ -20,11 +20,18 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
     private int protocolVersion;
     @Setter
     private boolean supportsForge = false;
+    private final boolean allowEmptyPackets; // Waterfall
 
     public MinecraftDecoder(Protocol protocol, boolean server, int protocolVersion) {
+        // Waterfall start
+        this(protocol, server, protocolVersion, false);
+    }
+    public MinecraftDecoder(Protocol protocol, boolean server, int protocolVersion, boolean allowEmptyPackets) {
+        // Waterfall end
         this.protocol = protocol;
         this.server = server;
         this.protocolVersion = protocolVersion;
+        this.allowEmptyPackets = allowEmptyPackets; // Waterfall
     }
 
     @Override
@@ -36,6 +43,13 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
         Object packetTypeInfo = null;
         try
         {
+            // Waterfall start
+            if (in.readableBytes() == 0) {
+                if (!allowEmptyPackets) throw new BadPacketException("Empty minecraft packet!");
+                return;
+            }
+            // Waterfall end
+
             int packetId = DefinedPacket.readVarInt( in );
             packetTypeInfo = packetId;
 
