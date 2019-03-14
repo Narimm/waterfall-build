@@ -12,7 +12,8 @@ import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import java.util.Objects; // Waterfall
+
+import io.github.waterfallmc.waterfall.event.ProxyDefineCommandsEvent; // Waterfall
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
@@ -20,8 +21,10 @@ import io.netty.channel.unix.DomainSocketAddress;
 import java.io.DataInput;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap; // Waterfall
 import java.util.List;
 import java.util.Map;
+import java.util.Objects; // Waterfall
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.ServerConnection;
 import net.md_5.bungee.UserConnection;
@@ -632,9 +635,25 @@ public class DownstreamBridge extends PacketHandler
     {
         boolean modified = false;
 
-        for ( Map.Entry<String, Command> command : bungee.getPluginManager().getCommands() )
+        // Waterfall start
+        Map<String, Command> commandMap = new HashMap<>();
+        for ( Map.Entry<String, Command> commandEntry : bungee.getPluginManager().getCommands() ) {
+            if ( !bungee.getDisabledCommands().contains( commandEntry.getKey() )
+                    && commands.getRoot().getChild( commandEntry.getKey() ) == null
+                    && commandEntry.getValue().hasPermission( this.con ) ) {
+
+                commandMap.put( commandEntry.getKey(), commandEntry.getValue() );
+            }
+        }
+
+        ProxyDefineCommandsEvent event = new ProxyDefineCommandsEvent( this.server, this.con, commandMap );
+        bungee.getPluginManager().callEvent( event );
+
+        for ( Map.Entry<String, Command> command : event.getCommands().entrySet() )
         {
-            if ( !bungee.getDisabledCommands().contains( command.getKey() ) && commands.getRoot().getChild( command.getKey() ) == null && command.getValue().hasPermission( con ) )
+            //noinspection ConstantConditions
+            if ( true ) // Moved up
+            // Waterfall end
             {
                 LiteralCommandNode dummy = LiteralArgumentBuilder.literal( command.getKey() )
                         .then( RequiredArgumentBuilder.argument( "args", StringArgumentType.greedyString() )
