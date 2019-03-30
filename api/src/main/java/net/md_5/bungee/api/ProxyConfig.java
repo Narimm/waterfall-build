@@ -16,21 +16,26 @@ public interface ProxyConfig
 
     /**
      * Time before users are disconnected due to no network activity.
+     * @return the time before users are disconnected due to no network activity.
      */
     int getTimeout();
 
     /**
      * UUID used for metrics.
+     * @return the UUID used for metrics
      */
     String getUuid();
 
     /**
      * Set of all listeners.
+     * @return a set of all listeners
      */
     Collection<ListenerInfo> getListeners();
 
     /**
      * Set of all servers.
+     *
+     * @return a map of registered servers
      *
      * @deprecated The returned map may be modified concurrently by the proxy.
      *             The safe alternative is {@link #getServersCopy()}.
@@ -122,32 +127,44 @@ public interface ProxyConfig
 
     /**
      * Does the server authenticate with mojang
+     *
+     * @return if the server authenticates to mojang
      */
     boolean isOnlineMode();
 
     /**
      * Whether proxy commands are logged to the proxy log
+     *
+     * @return should the proxy log commands
      */
     boolean isLogCommands();
 
     /**
      * Returns the player max.
+     *
+     * @return the player limit
      */
     int getPlayerLimit();
 
     /**
      * A collection of disabled commands.
+     *
+     * @return a collection of disabled commands
      */
     Collection<String> getDisabledCommands();
 
     /**
      * The connection throttle delay.
+     *
+     * @return the connection throttle delay
      */
     @Deprecated
     int getThrottle();
 
     /**
-     * Whether the proxy will parse IPs with spigot or not
+     * Whether the proxy will forward the players information (UUID, IP)
+     *
+     * @return should we forward player information
      */
     @Deprecated
     boolean isIpForward();
@@ -155,6 +172,7 @@ public interface ProxyConfig
     /**
      * The encoded favicon.
      *
+     * @return the encoded favicon
      * @deprecated Use #getFaviconObject instead.
      */
     @Deprecated
@@ -162,6 +180,8 @@ public interface ProxyConfig
 
     /**
      * The favicon used for the server ping list.
+     *
+     * @return the favicon used for the server ping list
      */
     Favicon getFaviconObject();
 
