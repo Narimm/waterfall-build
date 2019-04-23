@@ -5,9 +5,13 @@ import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.protocol.AbstractPacketHandler;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.ProtocolConstants;
+
+import net.md_5.bungee.chat.ComponentSerializer;
 
 @Data
 @NoArgsConstructor
@@ -52,10 +56,7 @@ public class PlayerListItem extends DefinedPacket
                     }
                     item.gamemode = DefinedPacket.readVarInt( buf );
                     item.ping = DefinedPacket.readVarInt( buf );
-                    if ( buf.readBoolean() )
-                    {
-                        item.displayName = DefinedPacket.readString( buf );
-                    }
+                    processDisplayName(item,buf);
                     break;
                 case UPDATE_GAMEMODE:
                     item.gamemode = DefinedPacket.readVarInt( buf );
@@ -64,10 +65,19 @@ public class PlayerListItem extends DefinedPacket
                     item.ping = DefinedPacket.readVarInt( buf );
                     break;
                 case UPDATE_DISPLAY_NAME:
-                    if ( buf.readBoolean() )
-                    {
-                        item.displayName = DefinedPacket.readString( buf );
-                    }
+                    processDisplayName(item,buf);
+            }
+        }
+    }
+
+    private void processDisplayName(Item item, ByteBuf buf){
+        if ( buf.readBoolean() ) {
+
+            try {
+                item.displayName = ComponentSerializer.parse(DefinedPacket.readString(buf));
+            } catch (Exception e) {
+                e.printStackTrace();
+                item.displayName = TextComponent.fromLegacyText(DefinedPacket.readString(buf));
             }
         }
     }
@@ -103,7 +113,7 @@ public class PlayerListItem extends DefinedPacket
                     buf.writeBoolean( item.displayName != null );
                     if ( item.displayName != null )
                     {
-                        DefinedPacket.writeString( item.displayName, buf );
+                        DefinedPacket.writeString( ComponentSerializer.toString(item.displayName), buf );
                     }
                     break;
                 case UPDATE_GAMEMODE:
@@ -116,7 +126,7 @@ public class PlayerListItem extends DefinedPacket
                     buf.writeBoolean( item.displayName != null );
                     if ( item.displayName != null )
                     {
-                        DefinedPacket.writeString( item.displayName, buf );
+                        DefinedPacket.writeString( ComponentSerializer.toString(item.displayName), buf );
                     }
                     break;
             }
@@ -157,7 +167,7 @@ public class PlayerListItem extends DefinedPacket
         private int ping;
 
         // ADD_PLAYER & UPDATE_DISPLAY_NAME
-        private String displayName;
+        private BaseComponent[] displayName;
 
     }
 }
