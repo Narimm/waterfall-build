@@ -1,17 +1,25 @@
 package net.md_5.bungee.tab;
 
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.tab.TabListHandler;
 import net.md_5.bungee.connection.LoginResult;
+import net.md_5.bungee.protocol.packet.PlayerListHeaderFooter;
 import net.md_5.bungee.protocol.packet.PlayerListItem;
 
-@RequiredArgsConstructor
-public abstract class TabList
+@NoArgsConstructor
+public abstract class TabList implements TabListHandler
 {
 
-    protected final ProxiedPlayer player;
+    protected ProxiedPlayer player;
+
+    @Override
+    public void init(ProxiedPlayer player)
+    {
+        this.player = player;
+    }
 
     public abstract void onUpdate(PlayerListItem playerListItem);
 
@@ -64,5 +72,11 @@ public abstract class TabList
             }
         }
         return playerListItem;
+    }
+
+    @Override
+    public void onUpdate(PlayerListHeaderFooter packet)
+    {
+        player.unsafe().sendPacket(packet);
     }
 }
