@@ -134,7 +134,7 @@ public class ChannelWrapper
     {
         if ( ch.pipeline().get( PacketCompressor.class ) == null && compressionThreshold != -1 )
         {
-            addBefore( PipelineUtils.PACKET_ENCODER, "compress", new PacketCompressor() );
+            addBefore( PipelineUtils.OUTBOUND_MONITOR, "compress", new PacketCompressor() );
         }
         if ( compressionThreshold != -1 )
         {
