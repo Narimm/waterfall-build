@@ -51,6 +51,7 @@ import net.md_5.bungee.netty.PipelineUtils;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.MinecraftDecoder;
 import net.md_5.bungee.protocol.MinecraftEncoder;
+import net.md_5.bungee.protocol.OutboundPacketMonitor;
 import net.md_5.bungee.protocol.PacketWrapper;
 import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.packet.Chat;
@@ -353,6 +354,7 @@ public final class UserConnection implements ProxiedPlayer
                 PipelineUtils.BASE.initChannel( ch );
                 ch.pipeline().addAfter( PipelineUtils.FRAME_DECODER, PipelineUtils.PACKET_DECODER, new MinecraftDecoder( Protocol.HANDSHAKE, false, getPendingConnection().getVersion(), bungee.getConfig().isAllowEmptyPackets() ) ); // Waterfall
                 ch.pipeline().addAfter( PipelineUtils.FRAME_PREPENDER, PipelineUtils.PACKET_ENCODER, new MinecraftEncoder( Protocol.HANDSHAKE, false, getPendingConnection().getVersion() ) );
+                ch.pipeline().addBefore( PipelineUtils.PACKET_ENCODER, PipelineUtils.OUTBOUND_MONITOR, new OutboundPacketMonitor( false ));
                 ch.pipeline().get( HandlerBoss.class ).setHandler( new ServerConnector( bungee, UserConnection.this, target ) );
             }
         };
