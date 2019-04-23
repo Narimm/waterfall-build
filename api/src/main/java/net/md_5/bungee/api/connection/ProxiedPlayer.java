@@ -8,10 +8,12 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.SkinConfiguration;
+import net.md_5.bungee.api.GameProfile;
 import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.tab.TabListHandler;
 import net.md_5.bungee.api.score.Scoreboard;
 
 /**
