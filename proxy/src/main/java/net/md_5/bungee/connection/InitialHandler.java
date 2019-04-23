@@ -134,7 +134,8 @@ public class InitialHandler extends PacketHandler implements PendingConnection
     {
         if ( packet.packet == null )
         {
-            throw new QuietException( "Unexpected packet received during login process! " + BufUtil.dump( packet.buf, 16 ) );
+            bungee.getLogger().warning( this.toString() + ": Unexpected packet received during login process!\n" + BufUtil.dump( packet.buf, 16 ) ); // Waterfall
+            ch.close(); // Waterfall
         }
     }
 
@@ -252,7 +253,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
         {
             int protocol = ( ProtocolConstants.SUPPORTED_VERSION_IDS.contains( handshake.getProtocolVersion() ) ) ? handshake.getProtocolVersion() : bungee.getProtocolVersion();
             pingBack.done( new ServerPing(
-                    new ServerPing.Protocol( bungee.getName() + " " + bungee.getGameVersion(), protocol ),
+                    new ServerPing.Protocol( "Minecraft " + bungee.getGameVersion(), protocol ),
                     new ServerPing.Players( listener.getMaxPlayers(), bungee.getOnlineCount(), null ),
                     motd, BungeeCord.getInstance().config.getFaviconObject() ),
                     null );
@@ -423,7 +424,6 @@ public class InitialHandler extends PacketHandler implements PendingConnection
             sha.update( bit );
         }
         String encodedHash = URLEncoder.encode( new BigInteger( sha.digest() ).toString( 16 ), "UTF-8" );
-
         String preventProxy = ( ( BungeeCord.getInstance().config.isPreventProxyConnections() ) ? "&ip=" + URLEncoder.encode( getAddress().getAddress().getHostAddress(), "UTF-8" ) : "" );
         String authURL = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=" + encName + "&serverId=" + encodedHash + preventProxy;
 
@@ -524,6 +524,8 @@ public class InitialHandler extends PacketHandler implements PendingConnection
 
                             ch.getHandle().pipeline().get( HandlerBoss.class ).setHandler( new UpstreamBridge( bungee, userCon ) );
                             bungee.getPluginManager().callEvent( new PostLoginEvent( userCon ) );
+                            userCon.getTabListHandler().onConnect();
+
                             ServerInfo server;
                             if ( bungee.getReconnectHandler() != null )
                             {
