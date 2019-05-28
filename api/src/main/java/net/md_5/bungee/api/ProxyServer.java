@@ -315,4 +315,10 @@ public abstract class ProxyServer
      */
     public abstract Title createTitle();
 
+    /**
+     * Gets the performance tracker which can track network usage
+     * @return The performance tracker
+     */
+    public abstract PerformanceTracker getPerformanceTracker();
+
 }
