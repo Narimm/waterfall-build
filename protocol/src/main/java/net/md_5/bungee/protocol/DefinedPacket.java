@@ -145,13 +145,18 @@ public abstract class DefinedPacket
         byte in;
         while ( true )
         {
+            // Waterfall start
+            if (input.readableBytes() == 0) {
+                throw new BadPacketException("No more bytes reading varint");
+            }
+            // Waterfall end
             in = input.readByte();
 
             out |= ( in & 0x7F ) << ( bytes++ * 7 );
 
             if ( bytes > maxBytes )
             {
-                throw new RuntimeException( "VarInt too big" );
+                throw new BadPacketException( "VarInt too big" );
             }
 
             if ( ( in & 0x80 ) != 0x80 )
