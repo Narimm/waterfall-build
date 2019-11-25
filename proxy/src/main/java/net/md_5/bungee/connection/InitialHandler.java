@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.BungeeCord;
@@ -424,6 +426,14 @@ public class InitialHandler extends PacketHandler implements PendingConnection
         Preconditions.checkState( thisState == State.ENCRYPT, "Not expecting ENCRYPT" );
 
         SecretKey sharedKey = EncryptionUtil.getSecret( encryptResponse, request );
+        // Waterfall start
+        if (sharedKey instanceof SecretKeySpec) {
+            if (sharedKey.getEncoded().length != 16) {
+             this.ch.close();
+             return;
+            }
+        }
+        // Waterfall end
         BungeeCipher decrypt = EncryptionUtil.getCipher( false, sharedKey );
         ch.addBefore( PipelineUtils.FRAME_DECODER, PipelineUtils.DECRYPT_HANDLER, new CipherDecoder( decrypt ) );
         BungeeCipher encrypt = EncryptionUtil.getCipher( true, sharedKey );
