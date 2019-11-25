@@ -19,6 +19,9 @@ import se.llbit.nbt.Tag;
 public abstract class DefinedPacket
 {
 
+    private static final boolean PROCESS_TRACES = Boolean.getBoolean("waterfall.bad-packet-traces");
+    private static final BadPacketException OVERSIZED_VAR_INT_EXCEPTION = new BadPacketException( "VarInt too big" );
+    private static final BadPacketException NO_MORE_BYTES_EXCEPTION = new BadPacketException("No more bytes reading varint");
     public static void writeString(String s, ByteBuf buf)
     {
         if ( s.length() > Short.MAX_VALUE )
@@ -153,13 +156,18 @@ public abstract class DefinedPacket
         byte in;
         while ( true )
         {
+            // Waterfall start
+            if (input.readableBytes() == 0) {
+                throw PROCESS_TRACES ? new BadPacketException("No more bytes reading varint") : NO_MORE_BYTES_EXCEPTION;
+            }
+            // Waterfall end
             in = input.readByte();
 
             out |= ( in & 0x7F ) << ( bytes++ * 7 );
 
             if ( bytes > maxBytes )
             {
-                throw new RuntimeException( "VarInt too big" );
+                throw PROCESS_TRACES ? new BadPacketException( "VarInt too big" ) : OVERSIZED_VAR_INT_EXCEPTION;
             }
 
             if ( ( in & 0x80 ) != 0x80 )
