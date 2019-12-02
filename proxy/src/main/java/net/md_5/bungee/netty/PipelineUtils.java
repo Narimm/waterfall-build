@@ -1,6 +1,7 @@
 package net.md_5.bungee.netty;
 
 import com.google.common.base.Preconditions;
+import io.github.waterfallmc.waterfall.event.ConnectionInitEvent;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelException;
@@ -26,6 +27,8 @@ import io.netty.handler.codec.haproxy.HAProxyMessageDecoder;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.util.AttributeKey;
 import io.netty.util.internal.PlatformDependent;
+
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -62,9 +65,22 @@ public class PipelineUtils
                 return;
             }
 
+            ConnectionInitEvent connectionInitEvent = new ConnectionInitEvent(ch.remoteAddress(), (result, throwable) -> { // Waterfall
+
+            if (result.isCancelled()) {
+                ch.close();
+                return;
+            }
+
             ListenerInfo listener = ch.attr( LISTENER ).get();
 
+            try {
             BASE.initChannel( ch );
+            } catch (Exception e) {
+                e.printStackTrace();
+                ch.close();
+                return;
+            }
             ch.pipeline().addBefore( FRAME_DECODER, LEGACY_DECODER, new LegacyDecoder() );
             ch.pipeline().addAfter( FRAME_DECODER, PACKET_DECODER, new MinecraftDecoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
             ch.pipeline().addAfter( FRAME_PREPENDER, PACKET_ENCODER, new MinecraftEncoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
@@ -75,6 +91,9 @@ public class PipelineUtils
             {
                 ch.pipeline().addFirst( new HAProxyMessageDecoder() );
             }
+            }); // Waterfall
+
+            BungeeCord.getInstance().getPluginManager().callEvent(connectionInitEvent);
         }
     };
     public static final Base BASE = new Base();
