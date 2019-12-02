@@ -1,5 +1,6 @@
 package net.md_5.bungee.netty;
 
+import io.github.waterfallmc.waterfall.event.ConnectionInitEvent;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelException;
@@ -31,6 +32,7 @@ import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.Util;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ListenerInfo;
+import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.connection.InitialHandler;
 import net.md_5.bungee.protocol.KickStringWriter;
 import net.md_5.bungee.protocol.LegacyDecoder;
@@ -57,9 +59,22 @@ public class PipelineUtils
                 return;
             }
 
+            ConnectionInitEvent connectionInitEvent = new ConnectionInitEvent((InetSocketAddress) ch.remoteAddress(), (result, throwable) -> { // Waterfall
+
+            if (result.isCancelled()) {
+                ch.close();
+                return;
+            }
+
             ListenerInfo listener = ch.attr( LISTENER ).get();
 
+            try {
             BASE.initChannel( ch );
+            } catch (Exception e) {
+                e.printStackTrace();
+                ch.close();
+                return;
+            }
             ch.pipeline().addBefore( FRAME_DECODER, LEGACY_DECODER, new LegacyDecoder() );
             ch.pipeline().addAfter( FRAME_DECODER, PACKET_DECODER, new MinecraftDecoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
             ch.pipeline().addAfter( FRAME_PREPENDER, PACKET_ENCODER, new MinecraftEncoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
@@ -70,6 +85,9 @@ public class PipelineUtils
             {
                 ch.pipeline().addFirst( new HAProxyMessageDecoder() );
             }
+            }); // Waterfall
+
+            BungeeCord.getInstance().getPluginManager().callEvent(connectionInitEvent);
         }
     };
     public static final Base BASE = new Base();
