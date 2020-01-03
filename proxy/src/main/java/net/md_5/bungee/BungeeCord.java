@@ -83,6 +83,7 @@ import net.md_5.bungee.conf.YamlConfig;
 import net.md_5.bungee.forge.ForgeConstants;
 import net.md_5.bungee.module.ModuleManager;
 import net.md_5.bungee.netty.PipelineUtils;
+import net.md_5.bungee.perfmon.PerformanceMonitor;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.ProtocolConstants;
 import net.md_5.bungee.protocol.packet.Chat;
@@ -165,6 +166,9 @@ public class BungeeCord extends ProxyServer
     @Getter
     private ConnectionThrottle connectionThrottle;
     private final ModuleManager moduleManager = new ModuleManager();
+
+    @Getter
+    private PerformanceMonitor performanceTracker = new PerformanceMonitor();
 
     {
         // TODO: Proper fallback when we interface the manager

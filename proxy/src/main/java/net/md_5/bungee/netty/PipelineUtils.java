@@ -38,6 +38,7 @@ import net.md_5.bungee.protocol.KickStringWriter;
 import net.md_5.bungee.protocol.LegacyDecoder;
 import net.md_5.bungee.protocol.MinecraftDecoder;
 import net.md_5.bungee.protocol.MinecraftEncoder;
+import net.md_5.bungee.protocol.OutboundPacketMonitor;
 import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.Varint21FrameDecoder;
 import net.md_5.bungee.protocol.Varint21LengthFieldPrepender;
@@ -79,6 +80,8 @@ public class PipelineUtils
             ch.pipeline().addAfter( FRAME_DECODER, PACKET_DECODER, new MinecraftDecoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
             ch.pipeline().addAfter( FRAME_PREPENDER, PACKET_ENCODER, new MinecraftEncoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
             ch.pipeline().addBefore( FRAME_PREPENDER, LEGACY_KICKER, legacyKicker );
+            ch.pipeline().addBefore( PACKET_ENCODER, OUTBOUND_MONITOR, new OutboundPacketMonitor(true));
+
             ch.pipeline().get( HandlerBoss.class ).setHandler( new InitialHandler( BungeeCord.getInstance(), listener ) );
 
             if ( listener.isProxyProtocol() )
@@ -103,6 +106,8 @@ public class PipelineUtils
     public static final String FRAME_PREPENDER = "frame-prepender";
     public static final String LEGACY_DECODER = "legacy-decoder";
     public static final String LEGACY_KICKER = "legacy-kick";
+    public static final String OUTBOUND_MONITOR = "outbound-monitor";
+
 
     private static boolean epoll;
 
