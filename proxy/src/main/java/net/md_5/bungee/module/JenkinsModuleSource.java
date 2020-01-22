@@ -18,7 +18,7 @@ public class JenkinsModuleSource implements ModuleSource
         System.out.println( "Attempting to Jenkins download module " + module.getName() + " v" + version.getBuild() );
         try
         {
-            URL website = new URL( "https://papermc.io/ci/job/Waterfall/" + version.getBuild() + "/artifact/Waterfall-Proxy/module/" + module.getName().replace( '_', '-' ) + "/target/" + module.getName() + ".jar" );
+            URL website = new URL( "https://jenkins.addstar.com.au/job/Waterfall/" + version.getBuild() + "/artifact/Waterfall-Proxy/module/" + module.getName().replace( '_', '-' ) + "/target/" + module.getName() + ".jar" );
             URLConnection con = website.openConnection();
             // 15 second timeout at various stages
             con.setConnectTimeout( 15000 );
