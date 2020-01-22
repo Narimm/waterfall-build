@@ -28,10 +28,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.md_5.bungee.api.Callback;
+import net.md_5.bungee.api.GameProfile;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.SkinConfiguration;
+import net.md_5.bungee.api.GameProfile.Property;
 import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -40,8 +42,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PermissionCheckEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.score.Scoreboard;
+import net.md_5.bungee.api.tab.TabListHandler;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.connection.InitialHandler;
+import net.md_5.bungee.connection.LoginResult;
 import net.md_5.bungee.entitymap.EntityMap;
 import net.md_5.bungee.forge.ForgeClientHandler;
 import net.md_5.bungee.forge.ForgeConstants;
@@ -61,6 +65,8 @@ import net.md_5.bungee.protocol.packet.Kick;
 import net.md_5.bungee.protocol.packet.PlayerListHeaderFooter;
 import net.md_5.bungee.protocol.packet.PluginMessage;
 import net.md_5.bungee.protocol.packet.SetCompression;
+import net.md_5.bungee.tab.Global;
+import net.md_5.bungee.tab.GlobalPing;
 import net.md_5.bungee.tab.ServerUnique;
 import net.md_5.bungee.tab.TabList;
 import net.md_5.bungee.util.CaseInsensitiveSet;
@@ -104,12 +110,14 @@ public final class UserConnection implements ProxiedPlayer
     @Setter
     private ServerInfo reconnectServer;
     @Getter
-    private TabList tabListHandler;
+    private TabListHandler tabListHandler;
     @Getter
     @Setter
     private int gamemode;
     @Getter
     private int compressionThreshold = -1;
+    @Getter
+    private GameProfile profile;
     // Used for trying multiple servers in order
     @Setter
     private Queue<String> serverJoinQueue;
@@ -162,7 +170,7 @@ public final class UserConnection implements ProxiedPlayer
 
         this.displayName = name;
 
-        tabListHandler = new ServerUnique( this );
+        setTabListHandler(null);
 
         Collection<String> g = bungee.getConfigurationAdapter().getGroups( name );
         g.addAll( bungee.getConfigurationAdapter().getGroups( getUniqueId().toString() ) );
@@ -170,6 +178,24 @@ public final class UserConnection implements ProxiedPlayer
         {
             addGroups( s );
         }
+
+
+        LoginResult result = getPendingConnection().getLoginProfile();
+        Property[] properties = null;
+        if (result != null && result.getProperties() != null)
+        {
+            properties = new Property[result.getProperties().length];
+            for (int i = 0; i < result.getProperties().length; ++i)
+            {
+                properties[i] = new Property(result.getProperties()[i].getName(), result.getProperties()[i].getValue(), result.getProperties()[i].getSignature());
+            }
+        }
+        else
+        {
+            properties = new Property[0];
+        }
+
+        this.profile = new GameProfile(getUniqueId(), getPendingConnection().getName(), properties);
 
         forgeClientHandler = new ForgeClientHandler( this );
 
@@ -197,6 +223,7 @@ public final class UserConnection implements ProxiedPlayer
     {
         Preconditions.checkNotNull( name, "displayName" );
         displayName = name;
+        tabListHandler.onUpdateName();
     }
 
     @Override
@@ -735,6 +762,31 @@ public final class UserConnection implements ProxiedPlayer
             unsafe.sendPacket( new SetCompression( compressionThreshold ) );
             ch.setCompressionThreshold( compressionThreshold );
         }
+    }
+
+    public void setTabListHandler(TabListHandler handler)
+    {
+        if (handler == null)
+        {
+            switch ( getPendingConnection().getListener().getTabListType() )
+            {
+                case "GLOBAL":
+                    tabListHandler = new Global();
+                    break;
+                case "SERVER":
+                    tabListHandler = new ServerUnique();
+                    break;
+                default:
+                    tabListHandler = new GlobalPing();
+                    break;
+            }
+        }
+        else
+        {
+            tabListHandler = handler;
+        }
+
+        tabListHandler.init(this);
     }
 
     @Override
