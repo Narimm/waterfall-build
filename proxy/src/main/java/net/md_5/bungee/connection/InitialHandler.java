@@ -146,7 +146,8 @@ public class InitialHandler extends PacketHandler implements PendingConnection
     {
         if ( packet.packet == null )
         {
-            throw new QuietException( "Unexpected packet received during login process! " + BufUtil.dump( packet.buf, 16 ) );
+            bungee.getLogger().warning( this.toString() + ": Unexpected packet received during login process!\n" + BufUtil.dump( packet.buf, 16 ) ); // Waterfall
+            ch.close(); // Waterfall
         }
     }
 
@@ -541,6 +542,8 @@ public class InitialHandler extends PacketHandler implements PendingConnection
 
                             ch.getHandle().pipeline().get( HandlerBoss.class ).setHandler( new UpstreamBridge( bungee, userCon ) );
                             bungee.getPluginManager().callEvent( new PostLoginEvent( userCon ) );
+                            userCon.getTabListHandler().onConnect();
+
                             ServerInfo server;
                             if ( bungee.getReconnectHandler() != null )
                             {
