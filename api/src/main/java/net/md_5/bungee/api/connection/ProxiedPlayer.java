@@ -8,10 +8,12 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.SkinConfiguration;
+import net.md_5.bungee.api.GameProfile;
 import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.tab.TabListHandler;
 import net.md_5.bungee.api.score.Scoreboard;
 
 /**
@@ -240,6 +242,21 @@ public interface ProxiedPlayer extends Connection, CommandSender
     void chat(String message);
 
     /**
+     * Sets the new tab list for the user. At this stage it is not advisable to
+     * change after the user has logged in!
+     *
+     * @param list the new list
+     */
+    void setTabListHandler(TabListHandler list);
+
+    /**
+     * Get the current tab list.
+     *
+     * @return the tab list in use by this user
+     */
+    TabListHandler getTabListHandler();
+
+    /**
      * Get the server which this player will be sent to next time the log in.
      *
      * @return the server, or null if default
@@ -275,6 +292,12 @@ public interface ProxiedPlayer extends Connection, CommandSender
      * @return the locale
      */
     Locale getLocale();
+
+    /**
+     * Gets this players game profile
+     * @return the profile
+     */
+    GameProfile getProfile();
 
     /**
      * Gets this player's view distance.
