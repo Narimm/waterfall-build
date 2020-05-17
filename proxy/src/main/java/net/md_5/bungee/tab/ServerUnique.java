@@ -11,11 +11,6 @@ public class ServerUnique extends TabList
 
     private final Collection<UUID> uuids = new HashSet<>();
 
-    public ServerUnique(ProxiedPlayer player)
-    {
-        super( player );
-    }
-
     @Override
     public void onUpdate(PlayerListItem playerListItem)
     {
@@ -50,6 +45,7 @@ public class ServerUnique extends TabList
             PlayerListItem.Item item = items[i++] = new PlayerListItem.Item();
             item.setUuid( uuid );
         }
+
         packet.setItems( items );
         player.unsafe().sendPacket( packet );
         uuids.clear();
@@ -63,6 +59,29 @@ public class ServerUnique extends TabList
 
     @Override
     public void onDisconnect()
+    {
+        if ( player.getServer() != null )
+        {
+            // Manually remove from everyone's tab list
+            // since the packet from the server arrives
+            // too late
+            PlayerListItem packet = new PlayerListItem();
+            packet.setAction( PlayerListItem.Action.REMOVE_PLAYER );
+            PlayerListItem.Item item = new PlayerListItem.Item();
+            item.setUuid( player.getUniqueId() );
+            packet.setItems( new PlayerListItem.Item[]
+            {
+                item
+            } );
+            for ( ProxiedPlayer player : player.getServer().getInfo().getPlayers() )
+            {
+                player.unsafe().sendPacket( packet );
+            }
+        }
+    }
+
+    @Override
+    public void onUpdateName()
     {
 
     }
