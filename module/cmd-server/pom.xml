@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.github.waterfallmc</groupId>
+        <groupId>au.com.addstar</groupId>
         <artifactId>waterfall-module</artifactId>
         <version>1.16-R0.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>io.github.waterfallmc</groupId>
+    <groupId>au.com.addstar</groupId>
     <artifactId>waterfall-module-cmd-server</artifactId>
     <version>1.16-R0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
