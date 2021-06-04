@@ -6,7 +6,6 @@ import java.util.List;
 public class ProtocolConstants
 {
 
-    private static final boolean SNAPSHOT_SUPPORT = Boolean.getBoolean( "net.md_5.bungee.protocol.snapshot" );
     public static final int MINECRAFT_1_8 = 47;
     public static final int MINECRAFT_1_9 = 107;
     public static final int MINECRAFT_1_9_1 = 108;
@@ -34,7 +33,7 @@ public class ProtocolConstants
     public static final int MINECRAFT_1_16_2 = 751;
     public static final int MINECRAFT_1_16_3 = 753;
     public static final int MINECRAFT_1_16_4 = 754;
-    public static final int MINECRAFT_1_17 = 1073741852;
+    public static final int MINECRAFT_1_17 = 755;
     public static final List<String> SUPPORTED_VERSIONS;
     public static final List<Integer> SUPPORTED_VERSION_IDS;
 
@@ -49,7 +48,8 @@ public class ProtocolConstants
                 "1.13.x",
                 "1.14.x",
                 "1.15.x",
-                "1.16.x"
+                "1.16.x",
+                "1.17"
         );
         ImmutableList.Builder<Integer> supportedVersionIds = ImmutableList.<Integer>builder().add(
                 ProtocolConstants.MINECRAFT_1_8,
@@ -78,14 +78,9 @@ public class ProtocolConstants
                 ProtocolConstants.MINECRAFT_1_16_1,
                 ProtocolConstants.MINECRAFT_1_16_2,
                 ProtocolConstants.MINECRAFT_1_16_3,
-                ProtocolConstants.MINECRAFT_1_16_4
+                ProtocolConstants.MINECRAFT_1_16_4,
+                ProtocolConstants.MINECRAFT_1_17
         );
-
-        if ( SNAPSHOT_SUPPORT )
-        {
-            supportedVersions.add( "1.17.x" );
-            supportedVersionIds.add( ProtocolConstants.MINECRAFT_1_17 );
-        }
 
         SUPPORTED_VERSIONS = supportedVersions.build();
         SUPPORTED_VERSION_IDS = supportedVersionIds.build();
