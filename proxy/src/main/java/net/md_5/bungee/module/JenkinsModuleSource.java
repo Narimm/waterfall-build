@@ -19,10 +19,10 @@ public class JenkinsModuleSource implements ModuleSource
         try
         {
             final String url = String.format(
-                "https://papermc.io/api/v2/projects/%1$s/versions/%2$s/builds/%3$s/downloads/%4$s-%2$s-%3$s.jar",
-                "waterfall",
-                net.md_5.bungee.api.ProxyServer.getInstance().getVersion().split(":")[2].split("-")[0],
+                "https://jenkins.addstar.com.au/job/%1$s/%2$s/artifact/module/%3$s/target/%4$s.jar",
+                "Waterfall",
                 version.getBuild(),
+                module.getName().replace( '_', '-' ),
                 module.getName()
             );
             URL website = new URL( url );
